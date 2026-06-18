@@ -5,7 +5,7 @@ export const authDataContext = createContext();
 const AuthContext = ({ children }) => {
   let [loading,setLoading] = useState(false)
 
-  const serverUrl = "http://localhost:8000";
+  const serverUrl = "https://bharat-backend-44yj.onrender.com";
 
   const value = {
     serverUrl,
