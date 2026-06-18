@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState  } from "react";
 import { useNavigate } from "react-router-dom";
-import BharatBnb from "../assets/BharatBnb.png";
+import BharatBnb from "../assets/BharatBnB.png";
 import { FiSearch } from "react-icons/fi";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { CgProfile } from "react-icons/cg";
