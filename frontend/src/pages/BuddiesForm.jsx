@@ -7,7 +7,7 @@ import { io } from "socket.io-client";
 import { userDataContext } from "../Context/UserContext";
 import { authDataContext } from "../Context/AuthContext";
 
-const socket = io("http://localhost:8000", { withCredentials: true });
+const socket = io("https://bharat-backend-44yj.onrender.com", { withCredentials: true });
 
 const BuddiesForm = () => {
   const navigate = useNavigate();
