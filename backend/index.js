@@ -22,7 +22,7 @@ const server = http.createServer(app);
 
 export const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "https://bharatbnb-frontend.onrender.com",
     credentials: true,
   },
 });
@@ -45,18 +45,18 @@ io.on("connection", (socket) => {
 
         console.log("Joined Room:", room);
 
-        // ✅ FIND MATCHED USERS ONLY
+        // FIND MATCHED USERS ONLY
         const matchedUsers = await Buddy.find({
           city,
           checkIn,
           checkOut,
           property: propertyId,
-          status: "matched", // 🔥 IMPORTANT
+          status: "matched", //  IMPORTANT
         })
           .populate("user", "name email")
           .populate("property");
 
-        // 🔥 EMIT ONLY IF 2 USERS
+        //  EMIT ONLY IF 2 USERS
         if (matchedUsers.length >= 2) {
           io.to(room).emit("buddyFound", matchedUsers);
         }
@@ -67,17 +67,17 @@ io.on("connection", (socket) => {
   );
  socket.on("sendMessage", async ({ room, message, sender, receiverId }) => {
    try {
-     // ✅ SAVE MESSAGE
+     // SAVE MESSAGE
      const newMessage = await Message.create({
        room,
        sender,
        message,
      });
 
-     // ✅ REAL-TIME CHAT
+     //  REAL-TIME CHAT
      io.to(room).emit("receiveMessage", newMessage);
 
-     // ✅ 🔔 SEND NOTIFICATION (IMPORTANT)
+     //  SEND NOTIFICATION (IMPORTANT)
      const receiverSocketId = global.onlineUsers?.[receiverId];
 
      if (receiverSocketId) {
