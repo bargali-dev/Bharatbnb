@@ -59,6 +59,11 @@ const Nav = () => {
     }
     
   }
+   useEffect(()=>{
+     console.log(input)
+    handleSearch(input)
+  },[input])
+  
 useEffect(() => {
   socket.on("newMessageNotification", (data) => {
     console.log("Notification:", data);
@@ -69,9 +74,7 @@ useEffect(() => {
   return () => socket.off("newMessageNotification");
 }, []);
 
-  useEffect(()=>{
-    handleSearch(input)
-  },[input])
+ 
 
 
 
@@ -209,7 +212,7 @@ useEffect(() => {
                     className="border-b border-[black] p-[10px]"
                     onClick={() => handleClick(search._id)}
                   >
-                    {search.title} in {search.landMark},{search.city}
+                    {search.title} in {search.landmark},{search.city}
                   </div>
                 ))}
               </div>
