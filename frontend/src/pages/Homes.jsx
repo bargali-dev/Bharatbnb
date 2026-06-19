@@ -20,7 +20,7 @@ const Homes = () => {
     <div className="w-full px-6 md:px-10 ">
       <Nav />
 
-      <div className="max-w-[800px] mx-auto flex flex-wrap gap-10 mt-10 ml-0 mb-6 justify-start">
+      <div className="w-full mt-10 mb-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         {newListData.map((list) => (
           <Cart
             key={list._id}
