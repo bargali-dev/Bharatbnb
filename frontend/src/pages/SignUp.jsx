@@ -53,7 +53,7 @@ const SignUp = () => {
         className="max-w-[900px] w-[90%] h-[600px] flex items-center justify-center flex-col md:items-start gap-[10px]"
         onSubmit={handleSignUp}
       >
-        <h1 className="text-[30px] text-[black]">Welcome to Airbnb</h1>
+        <h1 className="text-[30px] text-[black]">Welcome to Bharatbnb</h1>
 
         {/* Name */}
         <div className="w-[90%] flex items-start justify-start flex-col gap-[10px]">
