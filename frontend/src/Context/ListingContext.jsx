@@ -96,8 +96,8 @@ const ListingContext = ({ children }) => {
         `${serverUrl}/api/listing/search?query=${data}`,
         { withCredentials: true },
       );
-
-      setSearchData(result.data);
+      console.log(result.data);
+      setSearchData(result.data.listing);
     } catch (error) {
       setSearchData(null);
       console.log(error);
