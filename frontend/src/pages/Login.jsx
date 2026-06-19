@@ -54,7 +54,7 @@ const Login = () => {
         className="max-w-[900px] w-full h-[600px] flex items-center justify-center flex-col md:items-start gap-[10px]  "
         onSubmit={handleLogin}
       >
-        <h1 className="text-[30px] text-[black]">Welcome to Airbnb</h1>
+        <h1 className="text-[30px] text-[black]">Welcome to Bharatbnb</h1>
 
         {/* // email  */}
         <div className="w-full flex items-start justify-start flex-col gap-[10px]">
