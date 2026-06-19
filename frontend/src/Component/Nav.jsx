@@ -82,7 +82,7 @@ useEffect(() => {
     <div className="mb-[0px]">
       <div className=" w-full bg-[white] z-[20]">
         {/* TOP NAV */}
-        <div className="w-full min-h-[80px] border-b-[1px] border-[#dcdcdc] flex items-center justify-between px-[20px] md:px-[40px] ">
+        <div className="relative w-full min-h-[80px] border-b-[1px] border-[#dcdcdc] flex items-center justify-between px-[20px] md:px-[40px]">
           {/* Logo */}
           <div className="flex items-center mr-[0px]">
             <img src={BharatBnb} alt="logo" className="w-[250px] " />
@@ -205,8 +205,8 @@ useEffect(() => {
             )}
           </div>
           {searchData?.length > 0 && (
-            <div className="w-[100vw] h-[450px] flex flex-col gap-[20px] absolute top-[50%] overflow-auto left-[0] justify-start items-center">
-              <div className="max-w-[700px] w-[100vw] h-[300px] overflow-hidden flex flex-col bg-[#fefdfd] p-[20px] rounded-lg border-[1px] border-[#a2a1a1] cursor-pointer">
+            <div className="absolute top-full left-0 w-full flex justify-center mt-2 z-50">
+              <div className="w-[700px] max-h-[300px] overflow-y-auto flex flex-col bg-white p-4 rounded-lg border border-gray-300 shadow-lg cursor-pointer">
                 {searchData.map((search) => (
                   <div
                     className="border-b border-[black] p-[10px]"
