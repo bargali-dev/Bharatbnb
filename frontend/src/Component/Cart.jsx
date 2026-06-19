@@ -28,7 +28,7 @@ const Cart = ({title,landmark,image1,image2,image3,rent,city,id,rating,isBooked,
 
   return (
     <div
-      className="w-[800px] max-w-[70%] h-[800px] rdounded-lg cursor-pointer relative ml-20  mr-20 "
+      className="w-full h-[500px] rounded-lg cursor-pointer relative "
       onClick={() => (!isBooked ? handleClick() : null)}
     >
       {/* BOOKED BADGE */}
