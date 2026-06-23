@@ -34,29 +34,24 @@ io.on("connection", (socket) => {
      global.onlineUsers[userId] = socket.id;
      console.log("User Registered:", userId);
    });
-  // ✅ FIXED: correct payload + correct room format
   socket.on(
     "joinBuddyRoom",
     async ({ city, checkIn, checkOut, propertyId }) => {
       try {
-        // 🔥 SAME ROOM FORMAT AS CONTROLLER
         const room = `${propertyId}-${checkIn}-${checkOut}`;
         socket.join(room);
 
         console.log("Joined Room:", room);
-
-        // FIND MATCHED USERS ONLY
         const matchedUsers = await Buddy.find({
           city,
           checkIn,
           checkOut,
           property: propertyId,
-          status: "matched", //  IMPORTANT
+          status: "matched", 
         })
           .populate("user", "name email")
           .populate("property");
-
-        //  EMIT ONLY IF 2 USERS
+        
         if (matchedUsers.length >= 2) {
           io.to(room).emit("buddyFound", matchedUsers);
         }
@@ -67,22 +62,18 @@ io.on("connection", (socket) => {
   );
  socket.on("sendMessage", async ({ room, message, sender, receiverId }) => {
    try {
-     // SAVE MESSAGE
      const newMessage = await Message.create({
        room,
        sender,
        message,
      });
-
-     //  REAL-TIME CHAT
      io.to(room).emit("receiveMessage", newMessage);
 
-     //  SEND NOTIFICATION (IMPORTANT)
      const receiverSocketId = global.onlineUsers?.[receiverId];
 
      if (receiverSocketId) {
        io.to(receiverSocketId).emit("newMessageNotification", {
-         message: "New message received 💬",
+         message: "New message received ",
          room,
        });
      }
