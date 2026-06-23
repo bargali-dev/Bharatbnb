@@ -3,9 +3,6 @@ import { io } from "../index.js";
 import Listing from "../Modules/listing.Modules.js";
 import User from "../Modules/user.Modules.js";
 
-// ==============================
-// 🔍 FIND + MATCH BUDDY
-// ==============================
 export const findBuddy = async (req, res) => {
   try {
     const { city, checkIn, checkOut, gender, propertyId } = req.body;
@@ -14,7 +11,7 @@ export const findBuddy = async (req, res) => {
       return res.status(400).json({ message: "All required fields missing" });
     }
 
-    // ❗ REMOVE OLD ENTRY
+
     await Buddy.deleteMany({
       user: req.userId,
       property: propertyId,
@@ -22,7 +19,6 @@ export const findBuddy = async (req, res) => {
       checkOut,
     });
 
-    // ✅ CREATE NEW ENTRY
     const newBuddy = await Buddy.create({
       user: req.userId,
       city,
@@ -33,7 +29,6 @@ export const findBuddy = async (req, res) => {
       status: "searching",
     });
 
-    // 🔥 STRICT MATCH
     const buddies = await Buddy.find({
       city,
       checkIn,
@@ -57,7 +52,6 @@ export const findBuddy = async (req, res) => {
         });
       }
 
-      // ✅ UPDATE BOTH
       await Buddy.findByIdAndUpdate(newBuddy._id, {
         status: "matched",
         selectedUser: matchedBuddy.user._id,
@@ -77,7 +71,7 @@ export const findBuddy = async (req, res) => {
       io.to(room).emit("buddyFound", updatedBuddies);
 
       return res.status(200).json({
-        message: "Buddy Found 🎉",
+        message: "Buddy Found ",
         buddies: updatedBuddies,
       });
     }
@@ -92,9 +86,7 @@ export const findBuddy = async (req, res) => {
   }
 };
 
-// ==============================
-// 🔁 CHECK MATCH (Polling)
-// ==============================
+
 export const checkBuddy = async (req, res) => {
   try {
     const { city, checkIn, checkOut, propertyId } = req.body;
@@ -111,7 +103,7 @@ export const checkBuddy = async (req, res) => {
       .populate("property");
 
     return res.status(200).json({
-      message: buddies.length > 0 ? "Buddy Found 🎉" : "Still searching...",
+      message: buddies.length > 0 ? "Buddy Found " : "Still searching...",
       buddies,
     });
   } catch (error) {
@@ -120,9 +112,7 @@ export const checkBuddy = async (req, res) => {
   }
 };
 
-// ==============================
-// ✅ CONFIRM (User A / User B)
-// ==============================
+
 export const confirmBuddy = async (req, res) => {
   try {
     const { buddyId } = req.body;
@@ -137,7 +127,6 @@ export const confirmBuddy = async (req, res) => {
       return res.status(404).json({ message: "Buddy not found" });
     }
 
-    // 🔥 FIND MATCHED USER
     const matchedBuddy = await Buddy.findOne({
       user: currentBuddy.selectedUser,
       property: currentBuddy.property,
@@ -147,16 +136,15 @@ export const confirmBuddy = async (req, res) => {
 
     const room = `${currentBuddy.property}-${currentBuddy.checkIn}-${currentBuddy.checkOut}`;
 
-    // 🚀 SEND CONFIRM UPDATE
     io.to(room).emit("confirmUpdate", {
       userId: currentBuddy.user,
-      message: "User confirmed ✅",
+      message: "User confirmed ",
     });
 
-    // 🔥 BOTH CONFIRMED
+
     if (matchedBuddy && matchedBuddy.isConfirmed) {
       io.to(room).emit("bothConfirmed", {
-        message: "Both users confirmed 🎉",
+        message: "Both users confirmed ",
       });
     }
 
@@ -170,98 +158,13 @@ export const confirmBuddy = async (req, res) => {
   }
 };
 
-// ==============================
-// 📩 SEND REQUEST (NEW - IMPORTANT)
-// ==============================
-// export const sendBuddyRequest = async (req, res) => {
-//   try {
-//     const senderId = req.userId;
-//     const { receiverId, propertyId, checkIn, checkOut } = req.body;
 
-//     const buddy = await Buddy.create({
-//       user: senderId,
-//       selectedUser: receiverId,
-//       property: propertyId,
-//       checkIn,
-//       checkOut,
-//       type: "request", 
-//       status: "pending",
-//     });
-
-//     // 🔥 POPULATE DATA (IMPORTANT FIX)
-//     const populatedBuddy = await Buddy.findById(buddy._id)
-//       .populate("user", "name email")
-//       .populate("property");
-
-//     const receiverSocketId = global.onlineUsers?.[receiverId];
-
-//     if (receiverSocketId) {
-//       io.to(receiverSocketId).emit("buddyRequest", {
-//         requestId: buddy._id,
-//         fromUser: populatedBuddy.user, // ✅ FULL DATA
-//         property: populatedBuddy.property, // ✅ FULL DATA
-//       });
-//     }
-
-//     return res.status(200).json({
-//       message: "Request sent",
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).json({ message: error.message });
-//   }
-// };
-// export const sendBuddyRequest = async (req, res) => {
-//   try {
-//     const senderId = req.userId;
-//     const { receiverId, propertyId, checkIn, checkOut } = req.body;
-
-//      if (senderId.toString() === receiverId.toString()) {
-//           return res.status(400).json({
-//             message: "You cannot send request to yourself",
-//           });
-//        }
-
-
-//     const buddy = await Buddy.create({
-//       user: senderId,
-//       selectedUser: receiverId,
-//       property: propertyId,
-//       checkIn,
-//       checkOut,
-//       status: "searching",
-//     });
-
-//     // 🔥 POPULATE DATA (IMPORTANT FIX)
-//     const populatedBuddy = await Buddy.findById(buddy._id)
-//       .populate("user", "name email")
-//       .populate("property");
-
-//     const receiverSocketId = global.onlineUsers?.[receiverId];
-
-//     if (receiverSocketId) {
-//       io.to(receiverSocketId).emit("buddyRequest", {
-//         requestId: buddy._id,
-//         fromUser: populatedBuddy.user, // ✅ FULL DATA
-//         property: populatedBuddy.property, // ✅ FULL DATA
-//       });
-//     }
-
-//     return res.status(200).json({
-//       message: "Request sent",
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).json({ message: error.message });
-//   }
-// };
 
 export const sendBuddyRequest = async (req, res) => {
   try {
     const senderId = req.userId;
     const { receiverId, propertyId, checkIn, checkOut } = req.body;
 
-    // 🔥 FIND EXISTING MATCH
     const buddy = await Buddy.findOne({
       user: senderId,
       selectedUser: receiverId,
@@ -276,9 +179,7 @@ export const sendBuddyRequest = async (req, res) => {
         message: "Match not found",
       });
     }
-
-    // ✅ UPDATE STATUS (NOT CREATE)
-    buddy.status = "searching"; // or "pending"
+    buddy.status = "searching"; 
     await buddy.save();
 
     const populatedBuddy = await Buddy.findById(buddy._id)
@@ -309,10 +210,10 @@ export const getMyRequests = async (req, res) => {
     console.log(req.userId);
     const requests = await Buddy.find({
       $or: [
-        { selectedUser: req.userId }, // received
-        { user: req.userId }, // sent
+        { selectedUser: req.userId }, 
+        { user: req.userId }, 
       ],
-      // status: "searching", // ✅ ONLY THIS ADDED
+      // status: "searching",
     })
       .populate("user", "name email")
       .populate("selectedUser", "name email")
@@ -327,9 +228,7 @@ export const getMyRequests = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
-// ==============================
-// ✅ ACCEPT REQUEST
-// ==============================
+
 export const acceptBuddyRequest = async (req, res) => {
   try {
     const { requestId } = req.body;
@@ -345,20 +244,13 @@ export const acceptBuddyRequest = async (req, res) => {
     buddy.status = "accepted";
     await buddy.save();
 
-    // const room = `${buddy.property._id}-${buddy.checkIn}-${buddy.checkOut}`;
-
-    // io.to(room).emit("requestAccepted", {
-    //   message: "Buddy request accepted ✅",
-    //   buddy,
-    // });
-    
     const senderId = buddy.user._id.toString();
     const senderSocketId = global.onlineUsers?.[senderId];
 
     if (senderSocketId) {
       io.to(senderSocketId).emit("requestAccepted", {
         requestId: buddy._id,
-        message: "Your request was accepted ✅",
+        message: "Your request was accepted ",
         buddy,
       });
     }
@@ -373,9 +265,7 @@ export const acceptBuddyRequest = async (req, res) => {
   }
 };
 
-// ==============================
-// ❌ REJECT REQUEST
-// ==============================
+
 export const rejectBuddyRequest = async (req, res) => {
   try {
     const { requestId } = req.body;
@@ -389,12 +279,7 @@ export const rejectBuddyRequest = async (req, res) => {
     buddy.status = "rejected";
     await buddy.save();
 
-    // const room = `${buddy.property}-${buddy.checkIn}-${buddy.checkOut}`;
 
-    // io.to(room).emit("requestRejected", {
-    //   message: "Buddy request rejected ❌",
-    //   requestId,
-    // });
 
         const senderId = buddy.user.toString();
         const senderSocketId = global.onlineUsers?.[senderId];
@@ -402,7 +287,7 @@ export const rejectBuddyRequest = async (req, res) => {
         if (senderSocketId) {
           io.to(senderSocketId).emit("requestRejected", {
             requestId,
-            message: "Your request was rejected ❌",
+            message: "Your request was rejected ",
           });
         }
 
@@ -415,6 +300,3 @@ export const rejectBuddyRequest = async (req, res) => {
   }
 };
 
-// ==============================
-// 📥 GET ALL REQUESTS (FOR USER B)
-// ==============================
