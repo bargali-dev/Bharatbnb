@@ -14,10 +14,8 @@ const BuddiesForm = () => {
   const location = useLocation();
   const { serverUrl } = useContext(authDataContext);
 
-  // 🔥 PROPERTY ID FROM PREVIOUS PAGE
   const propertyId = location.state?.propertyId;
 
-  // ✅ STATES
   const [city, setCity] = useState("");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
@@ -38,7 +36,7 @@ const BuddiesForm = () => {
 
     const [sendingId, setSendingId] = useState(null);
 
-  // 🔍 SUBMIT FORM
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!propertyId) {
@@ -58,14 +56,10 @@ const BuddiesForm = () => {
       setBuddies(res.data.buddies || []);
       setSearched(true);
 
-      // 🔥 JOIN SOCKET ROOM
       socket.emit("joinBuddyRoom", payload);
 
       toast.success("Searching for buddies...");
-      // setCity = " ";
-      // setCheckIn = " ";
-      // setCheckOut = " ";
-      // setGender=" ";
+    
     } catch (err) {
       console.error(err);
       toast.error("Something went wrong");
@@ -74,7 +68,6 @@ const BuddiesForm = () => {
     }
   };
 
-  // 👤 SELECT BUDDY
   const handleSelect = (buddy) => {
     setSelectedBuddy(buddy);
     setSelectedProperty(buddy.property);
@@ -117,15 +110,13 @@ const BuddiesForm = () => {
     }
   };
 
- 
-  // 💳 PAYMENT
+
   const handlePayment = () => {
     if (!selectedProperty) return;
     const amount = total / 2;
     alert(`Proceeding to payment ₹${amount}`);
   };
 
-  // 🔥 SOCKET LISTENER
   useEffect(() => {
     socket.on("buddyFound", (data) => {
       setBuddies(data);
@@ -135,7 +126,7 @@ const BuddiesForm = () => {
     return () => socket.off("buddyFound");
   }, []);
 
-  // 🔁 FALLBACK CHECK
+
   useEffect(() => {
     if (!searched || buddies.length > 0 || !searchData) return;
 
@@ -159,8 +150,7 @@ const BuddiesForm = () => {
 
     return () => clearInterval(interval);
   }, [searched, buddies, searchData]);
-
-  // 🔢 CALCULATE TOTAL AND NIGHT STAY
+  
   useEffect(() => {
     if (checkIn && checkOut && selectedProperty) {
       const InDate = new Date(checkIn);
@@ -194,22 +184,9 @@ useEffect(() => {
     socket.emit("registerUser", userData?._id);
   }
 }, [userData]);
-  // useEffect(() => {
-  //   socket.on("buddyRequest", (data) => {
-  //     console.log("New Request:", data);
-
-  //     // store request
-  //     setRequests((prev) => [...prev, data]);
-
-  //     toast.info("New Buddy Request Received 🔔");
-  //   });
-
-  //   return () => socket.off("buddyRequest");
-  // }, []);
-
+ 
   return (
     <div className="w-full min-h-screen flex flex-col items-center">
-      {/* 🔙 BACK */}
       <div
         className="w-[50px] h-[50px] bg-red-500 absolute top-5 left-5 rounded-full flex items-center justify-center cursor-pointer ml-[60px] t0p-[30px]"
         onClick={() => navigate(-1)}
@@ -217,7 +194,6 @@ useEffect(() => {
         <FaArrowLeftLong className="text-white" />
       </div>
 
-      {/* 📄 FORM */}
       <form
         onSubmit={handleSubmit}
         className="mt-40 w-[550px] h-[500px] border p-6 rounded-xl shadow-md flex flex-col gap-10"
@@ -264,7 +240,6 @@ useEffect(() => {
         </button>
       </form>
 
-      {/* 🔍 RESULTS */}
       {searched && (
         <div className="mt-6 w-[550px] h-11">
           {buddies.length > 0 ? (
@@ -304,17 +279,16 @@ useEffect(() => {
         </div>
       )}
 
-      {/* 🎯 SELECTED PROPERTY + BUDDY */}
       {selectedBuddy && selectedProperty && (
         <div className="w-full flex flex-col items-center mt-10 gap-6">
-          {/* 🔥 PROPERTY HEADER */}
+      
           <div className="w-[95%] md:w-[80%] mt-[80px] mb-[15px]">
             <h1 className="text-[22px] md:text-[32px] font-semibold text-[#272727] truncate px-[30px] md:px-0">
               {`In ${selectedProperty.landmark?.toUpperCase()}, ${selectedProperty.city?.toUpperCase()}`}
             </h1>
           </div>
 
-          {/* 🔥 IMAGES */}
+      
           <div className="w-[95%] md:w-[80%] flex flex-col md:flex-row gap-[10px]">
             <div className="w-full md:w-[70%] h-[310px] md:h-[600px] overflow-hidden rounded-[14px]">
               <img
@@ -341,22 +315,20 @@ useEffect(() => {
             </div>
           </div>
 
-          {/* 🔥 TITLE */}
+          
           <div className="w-[95%] md:w-[80%] text-[18px] md:text-[25px] font-semibold">
             {`${selectedProperty.title?.toUpperCase()} , ${selectedProperty.landmark?.toUpperCase()}`}
           </div>
 
-          {/* 🔥 DESCRIPTION */}
           <div className="w-[95%] md:w-[80%] text-[16px] md:text-[20px] text-gray-700">
             {selectedProperty.description}
           </div>
 
-          {/* 🔥 PRICE */}
           <div className="w-[95%] md:w-[80%] text-[18px] md:text-[24px] font-bold text-green-600">
             ₹{selectedProperty.rent}/day
           </div>
 
-          {/* 👤 BUDDY */}
+       
           <div className="w-[97%] md:w-[85%] border p-4 rounded-lg shadow-md bg-gray-50">
             <h3 className="text-lg font-semibold text-blue-600 mb-2">
               Travel Buddy
@@ -372,7 +344,6 @@ useEffect(() => {
             </p>
           </div>
 
-          {/* 💰 PAYMENT SPLIT */}
           <div className="w-[97%] md:w-[85%]  border-[1px] border-[#dedddd] rounded-lg flex items-start justify-start p-[20px] gap-[15px] flex-col">
             <h1 className="text-[22px] font-semibold">Booking Price - </h1>
             <p className="w-full flex justify-between items-center px-[20px]">
@@ -401,12 +372,11 @@ useEffect(() => {
             Confirm and Go to notification for Book Now
           </button>
 
-          {/* 💳 PAYMENT BUTTON */}
           {/* <button
             onClick={handlePayment}
             className="w-[95%] md:w-[80%] bg-green-500 text-white py-3 rounded-lg text-lg font-semibold hover:bg-green-600"
           >
-            Proceed to Payment 💳
+            Proceed to Payment 
           </button> */}
         </div>
       )}
