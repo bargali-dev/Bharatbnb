@@ -15,11 +15,23 @@ export const addListing = async (req, res) => {
   if (!title || !description || !rent || !city) {
     return res.status(400).json({ message: "All fields are required" });
   }
-
-
+  
   try {
     console.log("FILES:", req.files);
     console.log("BODY:", req.body);
+    
+  const existingListing = await Listing.findOne({
+    host: req.userId,
+    title: title.trim(),
+    city: city.trim(),
+    landmark: landMark.trim(),
+  });
+
+  if (existingListing) {
+    return res.status(400).json({
+      message: "Listing already exists",
+    });
+  }
 
     let host = req.userId;
     let image1 = await uploadOnCloudinary(req.files.image1[0].path);
