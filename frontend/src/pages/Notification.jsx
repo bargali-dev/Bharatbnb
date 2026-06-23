@@ -6,8 +6,8 @@ import { userDataContext } from "../Context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
-// ✅ SOCKET OUTSIDE COMPONENT
-const socket = io("http://localhost:8000", { withCredentials: true });
+
+const socket = io("https://bharat-backend-44yj.onrender.com", { withCredentials: true });
 
 const Notification = () => {
   const { serverUrl } = useContext(authDataContext);
@@ -16,9 +16,7 @@ const Notification = () => {
   const [requests, setRequests] = useState([]);
   const navigate = useNavigate();
 
-  // ==============================
-  // 📥 FETCH REQUESTS
-  // ==============================
+ 
   const fetchRequests = async () => {
     try {
       const res = await axios.get(`${serverUrl}/api/buddies/requests`, {
@@ -36,9 +34,7 @@ const Notification = () => {
     fetchRequests();
   }, []);
 
-  // ==============================
-  // ✅ ACCEPT
-  // ==============================
+
   const handleAccept = async (req) => {
     try {
       await axios.post(
@@ -47,7 +43,7 @@ const Notification = () => {
         { withCredentials: true },
       );
 
-      toast.success("Accepted ✅");
+      toast.success("Accepted");
 
       setRequests((prev) =>
         prev.map((r) => (r._id === req._id ? { ...r, status: "accepted" } : r)),
@@ -59,9 +55,7 @@ const Notification = () => {
     }
   };
 
-  // ==============================
-  // ❌ REJECT
-  // ==============================
+
   const handleReject = async (req) => {
     try {
       await axios.post(
@@ -70,7 +64,7 @@ const Notification = () => {
         { withCredentials: true },
       );
 
-      toast.error("Rejected ❌");
+      toast.error("Rejected ");
 
       setRequests((prev) =>
         prev.map((r) => (r._id === req._id ? { ...r, status: "rejected" } : r)),
@@ -80,9 +74,6 @@ const Notification = () => {
     }
   };
 
-  // ==============================
-  // 🔥 SOCKET LISTENERS
-  // ==============================
   useEffect(() => {
     socket.on("requestAccepted", (data) => {
       setRequests((prev) =>
@@ -114,15 +105,13 @@ const Notification = () => {
 
       setRequests((prev) => [...prev, data]);
 
-      toast.info("New Buddy Request Received 🔔");
+      toast.info("New Buddy Request Received ");
     });
 
     return () => socket.off("buddyRequest");
   }, []);
 
-  // ==============================
-  // 🎨 UI
-  // ==============================
+
   return (
     <div className="w-full min-h-screen flex flex-col items-center mt-20">
       <button
@@ -145,22 +134,17 @@ const Notification = () => {
                 key={req._id}
                 className="border p-4 rounded-lg shadow-md bg-white"
               >
-                {/* 👤 USER */}
                 <p className="font-semibold text-lg">
                   {req.user?.name || req.fromUser?.name}
                 </p>
 
-                {/* 🏠 PROPERTY */}
                 <p className="text-gray-600">{req.property?.title}</p>
 
-                {/* 📅 DATES */}
                 <p className="text-sm text-gray-500">
                   {req.checkIn} → {req.checkOut}
                 </p>
 
-                {/* ================= STATUS UI ================= */}
-
-                {/* ⏳ PENDING → ONLY RECEIVER */}
+             
                 {req.status === "searching" &&
                   req.selectedUser?._id?.toString() === currentUserId && (
                     <div className="flex gap-3 mt-3">
@@ -180,20 +164,20 @@ const Notification = () => {
                     </div>
                   )}
 
-                {/* ❌ REJECTED → USER A */}
+              
                 {req.status === "rejected" &&
                   req.user?._id?.toString() === currentUserId && (
                     <p className="text-red-500 mt-3 font-medium">
-                      ❌ Your request was rejected
+                      Your request was rejected
                     </p>
                   )}
 
-                {/* ✅ ACCEPTED → USER A */}
+                
                 {req.status === "accepted" &&
                   req.user?._id?.toString() === currentUserId && (
                     <div className="mt-3">
                       <p className="text-green-600 font-medium">
-                        ✅ Your request was accepted
+                        Your request was accepted
                       </p>
 
                       <div className="flex gap-3 mt-2">
