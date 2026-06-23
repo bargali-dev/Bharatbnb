@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { IoSend } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
-// import { io } from "socket.io-client";
 import { socket } from "../Context/Socket";
 import axios from "axios";
 import { useContext } from "react";
@@ -10,7 +9,6 @@ import { authDataContext } from "../Context/AuthContext";
 import { userDataContext } from "../Context/UserContext";
 import {  bookingDataContext } from "../Context/BookingContext";
  const Accepted = () => {
-  // const socket = io("http://localhost:8000", { withCredentials: true });
      const { serverUrl } = useContext(authDataContext);
      const location = useLocation();
      const navigate = useNavigate();
@@ -25,8 +23,6 @@ import {  bookingDataContext } from "../Context/BookingContext";
        if (!message.trim()) return;
 
        const room = `${buddy.property._id}-${buddy.checkIn}-${buddy.checkOut}`;
-
-       // 👇 IMPORTANT: decide receiver
        const receiverId =
          buddy.user._id === userData._id
            ? buddy.selectedUser._id
@@ -36,9 +32,8 @@ import {  bookingDataContext } from "../Context/BookingContext";
          room,
          message,
          sender: userData._id,
-         receiverId, // ✅ FIX
+         receiverId,
        });
-
        setMessage("");
      };
      useEffect(() => {
@@ -79,7 +74,7 @@ import {  bookingDataContext } from "../Context/BookingContext";
 
     return (
       <div className="w-full min-h-screen flex flex-col items-center mt-20">
-        {/* 🏠 PROPERTY CARD */}
+     
         <div className="w-full min-h-screen bg-white flex flex-col items-center relative overflow-auto">
           <div
             className="w-[50px] h-[50px] bg-red-500 cursor-pointer absolute top-[20px] left-[20px] rounded-full flex items-center justify-center"
@@ -88,14 +83,12 @@ import {  bookingDataContext } from "../Context/BookingContext";
             <FaArrowLeftLong className="w-[25px] h-[25px] text-white" />
           </div>
 
-          {/* Title */}
           <div className="w-[95%] md:w-[80%] mt-[80px] mb-[15px]">
             <h1 className="text-[22px] md:text-[32px] font-semibold text-[#272727] truncate px-[30px] md:px[0px]">
               {`In ${buddy.property?.landmark?.toUpperCase()}, ${buddy.property?.city?.toUpperCase()}`}
             </h1>
           </div>
 
-          {/* Image Section */}
           <div className="w-[95%] md:w-[80%] flex flex-col md:flex-row gap-[10px]">
             {/* Big Image */}
             <div className="w-full md:w-[70%] h-[310px] md:h-[600px] overflow-hidden rounded-[14px]">
@@ -106,7 +99,6 @@ import {  bookingDataContext } from "../Context/BookingContext";
               />
             </div>
 
-            {/* Small Images */}
             <div className="w-full md:w-[30%] h-[170px] md:h-[600px] flex flex-row md:flex-col gap-[10px]">
               <div className="w-[50%] md:w-full h-full md:h-[50%] overflow-hidden rounded-[14px]">
                 <img
@@ -132,7 +124,7 @@ import {  bookingDataContext } from "../Context/BookingContext";
           <div className="w-[95%] flex items-start justify-start text-[18px] md:w-[80%] md:text-[25px] text-gray-800 ">{`${buddy.property?.description?.toUpperCase()}`}</div>
 
           <div className="w-[95%] flex items-start justify-start text-[18px] md:w-[80%] md:text-[25px] ">{`${buddy.property?.rent}/day`}</div>
-          {/* 👤 BUDDY INFO */}
+   
 
           <div className="mt-4 border-t pt-3 w-[1200px]">
             <h1 className="text-2xl font-bold mb-6">Accepted Buddy </h1>
@@ -140,9 +132,7 @@ import {  bookingDataContext } from "../Context/BookingContext";
             <p className="text-sm text-gray-500">{buddy.user?.email}</p>
           </div>
 
-          {/* 🔥 ACTION BUTTONS */}
           <div className="flex gap-4 mt-8 mr-[1000px]">
-            {/* 💬 CHAT BUTTON */}
             <button
               onClick={() => setShowChat(!showChat)}
               className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
@@ -150,7 +140,6 @@ import {  bookingDataContext } from "../Context/BookingContext";
               {showChat ? "Close Chat" : "Chat"}
             </button>
 
-            {/* 📦 BOOK BUTTON */}
             <button
               onClick={() =>
                 handleBooking(
@@ -166,7 +155,6 @@ import {  bookingDataContext } from "../Context/BookingContext";
             </button>
           </div>
 
-          {/* 💬 CHAT BOX */}
           {showChat && (
             <div className="mt-5 border rounded p-3 w-[550px]">
               <div className="h-40 overflow-y-auto border p-2 mb-2 bg-gray-50">
