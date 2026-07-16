@@ -19,21 +19,16 @@ const BookingContext = ({children}) => {
   let navigate = useNavigate();
 
 
-  const handleBooking = async (
-    id,
-    buddyId = null,
-    checkInDate,
-    checkOutDate,
-  ) => {
+  const handleBooking = async (id,buddy ) => {
     setBooking(true);
     try {
       let result = await axios.post(
         `${serverUrl}/api/booking/create/${id}`,
         {
-          checkIn: checkInDate,
-          checkOut: checkOutDate,
+          checkIn,
+          checkOut,
           totalRent: total,
-          buddyId,
+          buddyId:buddy,
         },
         { withCredentials: true },
       );
