@@ -19,7 +19,7 @@ const BookingContext = ({children}) => {
   let navigate = useNavigate();
 
 
-  const handleBooking = async (id,buddy ) => {
+  const handleBooking = async (id,buddy,checkIn,checkOut ) => {
     setBooking(true);
     try {
       let result = await axios.post(
