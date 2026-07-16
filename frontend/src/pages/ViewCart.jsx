@@ -418,7 +418,12 @@ const ViewCart = () => {
               <div className="w-[100%] flex items-center justify-center">
                 <button
                   className="px-[80px] py-[10px] text-nowrap bg-[red] text-[white] text-[15px] rounded-lg md:px-[100px] md:text-[18px] mt-[30px]"
-                  onClick={() =>  handleBooking(cardDetails._id,null)}
+                  onClick={() =>  handleBooking(
+    cardDetails._id,
+    null,
+    checkIn,
+    checkOut
+  )}
                   disabled={booking}
                 >
                   {booking ? "...Booking" : "Book Now"}
