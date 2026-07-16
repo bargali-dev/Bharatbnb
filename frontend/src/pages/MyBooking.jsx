@@ -9,6 +9,7 @@ const MyBooking = () => {
   
  let navigate = useNavigate();
  let { userData } = useContext(userDataContext);
+  console.log(userData);
  console.log(userData.booking)
  return (
    <div className=" flex items-center justify-center flex-col gap-[50px] relative">
