@@ -4,6 +4,9 @@ import User from "../Modules/user.Modules.js";
 
 export const createBooking = async (req, res) => {
   try {
+     console.log("Params:", req.params);
+    console.log("Body:", req.body);
+    console.log("User:", req.userId);
     const { id } = req.params;
     const { checkIn, checkOut, totalRent, buddyId } = req.body;
 
@@ -41,6 +44,7 @@ export const createBooking = async (req, res) => {
 
     res.status(201).json(booking);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: error.message });
   }
 };
